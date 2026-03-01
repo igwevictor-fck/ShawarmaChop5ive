@@ -3,11 +3,11 @@ const whatsappNumber = "2348089099685";
 let cart = [];
 
 const products = [
-  {name:"Beef Shawarma + 1 Hotdog", price:2500, image:"https://images.unsplash.com/photo-1604908177225-5b5fbd7be3c7?w=1000"},
-  {name:"Beef Shawarma + 2 Hotdogs", price:3000, image:"https://images.unsplash.com/photo-1617196039897-6b16c0daac90?w=1000"},
-  {name:"Chicken Shawarma + 1 Hotdog", price:3000, image:"https://images.unsplash.com/photo-1604908177225-5b5fbd7be3c7?w=1000"},
-  {name:"Chicken Shawarma + 2 Hotdogs", price:3500, image:"https://images.unsplash.com/photo-1617196039897-6b16c0daac90?w=1000"},
-  {name:"Jumbo Shawarma", price:6000, image:"https://images.unsplash.com/photo-1585238342028-4e7d8a6a8c8d?w=1000"}
+  {name:"Beef Shawarma + 1 Hotdog", price:2500, image:"beef-sausage-shawarma-recipe-main-photo.jpg"},
+  {name:"Beef Shawarma + 2 Hotdogs", price:3000, image:"item242193189.jpg"},
+  {name:"Chicken Shawarma + 1 Hotdog", price:3000, image:"ym7lhpiyosyudyefblvh.jpg"},
+  {name:"Chicken Shawarma + 2 Hotdogs", price:3500, image:"item153738991.jpg"},
+  {name:"Jumbo Shawarma", price:6000, image:"1400x919-SausageMeatballMeltPittas-de071294-9bc8-465f-b23e-84c86872573a-0-1400x919.jpg"}
 ];
 
 const menu = document.getElementById("menu");
@@ -155,3 +155,6 @@ function slideInCards(){
 }
 window.addEventListener('scroll', slideInCards);
 window.addEventListener('load', slideInCards);
+window.addEventListener('scroll', slideInCards);
+window.addEventListener('load', slideInCards);
+
