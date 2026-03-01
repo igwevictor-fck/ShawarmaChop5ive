@@ -1,87 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shawarma Chop 5ive</title>
-<link rel="stylesheet" href="sha.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shawarma Chop 5ive</title>
+  <link rel="stylesheet" href="sha.css">
 </head>
 <body>
 
-<header>
-    <!-- Chef Icon Added -->
-    <h1>👨‍🍳🌯 Shawarma Chop 5ive</h1>
-    <div class="header-right">
-        <button id="themeToggle">🌙</button>
-        <button id="openCart">🛒 <span id="cart-count">0</span></button>
+  <!-- HEADER -->
+  <header>
+    <div class="logo-container">
+      <span class="logo-icon">🌯</span>
+      <h1 class="logo-text">Shawarma Chop 5ive</h1>
     </div>
-</header>
 
-<section class="hero">
+    <div class="header-right">
+      <button id="themeToggle" class="icon-btn">🌙</button>
+      <button id="openCart" class="cart-btn">🛒 <span id="cart-count">0</span></button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
     <h2>Hot & Fresh Shawarma Delivered Fast 🔥</h2>
-</section>
+  </section>
 
-<section class="menu">
+  <!-- MENU -->
+  <section class="menu" id="menu"></section>
 
-<!-- First Card -->
-<div class="card">
-<img src="https://images.unsplash.com/photo-1529006557810-274b9b2fc783?auto=format&fit=crop&w=900&q=80" alt="Shawarma + 1 Hotdog">
-<h3>Shawarma + 1 Hotdog</h3>
-<p>₦2500</p>
-<button onclick="addToCart('Shawarma + 1 Hotdog',2500)">Add to Cart</button>
-</div>
+  <!-- Overlay -->
+  <div id="overlay"></div>
 
-<!-- Second Card (Shawarma + 2 Hotdogs) -->
-<div class="card">
-<img src="https://images.unsplash.com/photo-1603052876380-fb0f7c5b8738?auto=format&fit=crop&w=900&q=80" alt="Shawarma + 2 Hotdogs">
-<h3>Shawarma + 2 Hotdogs</h3>
-<p>₦3000</p>
-<button onclick="addToCart('Shawarma + 2 Hotdogs',3000)">Add to Cart</button>
-</div>
+  <!-- CART DRAWER -->
+  <div id="cartDrawer" class="cart-drawer">
+    <div class="cart-header">
+      <button id="closeCart" class="back-btn">⬅</button>
+      <h2>Your Cart</h2>
+    </div>
 
-</section>
+    <div id="emptyMessage">Your cart is empty 🛒</div>
+    <ul id="cart"></ul>
 
-<!-- CART DRAWER -->
-<div id="cartDrawer" class="cart-drawer">
-<h2>Your Cart</h2>
-<ul id="cart"></ul>
+    <div class="totals">
+      <h3>Subtotal: ₦<span id="subtotal">0</span></h3>
+      <h3>Delivery: ₦500</h3>
+      <h2>Total: ₦<span id="total">0</span></h2>
+    </div>
 
-<h3>Subtotal: ₦<span id="subtotal">0</span></h3>
-<h3>Delivery: ₦500</h3>
-<h2>Total: ₦<span id="total">0</span></h2>
+    <input type="text" id="address" placeholder="Enter delivery address">
+    <select id="payment">
+      <option>Cash on Delivery</option>
+      <option>Card Payment</option>
+      <option>Bank Transfer</option>
+    </select>
 
-<input type="text" id="address" placeholder="Enter delivery address">
-<select id="payment">
-<option>Cash on Delivery</option>
-<option>Card Payment</option>
-<option>Bank Transfer</option>
-</select>
+    <button class="checkout" id="checkoutBtn">Place Order</button>
+  </div>
 
-<button class="checkout" onclick="checkout()">Place Order</button>
-<button id="closeCart" class="close-btn">Close</button>
-</div>
-
-<script src="sha.js"></script>
+  <script src="sha.js"></script>
+</body>
+</html>
 </body>
 </html>
 
-<h3>Subtotal: ₦<span id="subtotal">0</span></h3>
-<h3>Delivery: ₦500</h3>
-<h2>Total: ₦<span id="total">0</span></h2>
-
-<input type="text" id="address" placeholder="Enter delivery address">
-<select id="payment">
-<option>Cash on Delivery</option>
-<option>Card Payment</option>
-<option>Bank Transfer</option>
-</select>
-
-<button class="checkout" onclick="checkout()">Place Order</button>
-<button id="closeCart" class="close-btn">Close</button>
-</div>
-
-<script src="sha.js"></script>
-</body>
-</html>
 
 
