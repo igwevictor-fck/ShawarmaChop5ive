@@ -1,0 +1,188 @@
+body {
+margin:0;
+font-family: Arial;
+background:#fff8f0;
+transition:0.3s;
+}
+
+body.dark {
+background:#111;
+color:white;
+}
+
+header {
+background:#d62828;
+color:white;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 25px;
+flex-wrap:wrap;
+}
+
+.header-right {
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+header button {
+background:none;
+border:none;
+color:white;
+font-size:18px;
+cursor:pointer;
+}
+
+.hero {
+text-align:center;
+padding:40px 20px;
+background:linear-gradient(to right,#f77f00,#fcbf49);
+color:white;
+}
+
+.menu {
+display:flex;
+gap:20px;
+justify-content:center;
+flex-wrap:wrap;
+padding:30px 20px;
+}
+
+.card {
+background:white;
+width:260px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+overflow:hidden;
+transition:0.3s;
+}
+
+body.dark .card {
+background:#222;
+}
+
+.card:hover {
+transform:translateY(-8px);
+}
+
+.card img {
+width:100%;
+height:220px;
+object-fit:cover;
+display:block;
+}
+
+.card h3,
+.card p {
+padding:10px;
+margin:0;
+}
+
+.card button {
+background:#d62828;
+color:white;
+border:none;
+padding:12px;
+width:100%;
+cursor:pointer;
+font-weight:bold;
+}
+
+.cart-drawer {
+position:fixed;
+top:0;
+right:-100%;
+width:350px;
+max-width:100%;
+height:100%;
+background:white;
+padding:20px;
+box-shadow:-5px 0 20px rgba(0,0,0,0.3);
+transition:0.4s;
+overflow:auto;
+z-index:1000;
+}
+
+body.dark .cart-drawer {
+background:#222;
+}
+
+.cart-drawer.open {
+right:0;
+}
+
+.cart-drawer ul {
+list-style:none;
+padding:0;
+}
+
+.cart-drawer li {
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+font-size:14px;
+}
+
+.cart-drawer li div button {
+margin-left:5px;
+padding:3px 6px;
+border:none;
+background:#d62828;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+input, select {
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+
+.checkout {
+background:green;
+color:white;
+border:none;
+padding:12px;
+width:100%;
+cursor:pointer;
+font-weight:bold;
+}
+
+.close-btn {
+background:#444;
+color:white;
+border:none;
+padding:10px;
+width:100%;
+margin-top:10px;
+cursor:pointer;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width:768px) {
+
+.menu {
+flex-direction:column;
+align-items:center;
+}
+
+.card {
+width:90%;
+}
+
+.cart-drawer {
+width:100%;
+}
+
+header h1 {
+font-size:18px;
+}
+
+.hero h2 {
+font-size:18px;
+}
+
+}
