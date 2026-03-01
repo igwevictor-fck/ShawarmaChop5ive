@@ -3,11 +3,31 @@ const whatsappNumber = "2348089099685";
 let cart = [];
 
 const products = [
-  {name:"Beef Shawarma + 1 Hotdog", price:2500, image:"beef-sausage-shawarma-recipe-main-photo.jpg"},
-  {name:"Beef Shawarma + 2 Hotdogs", price:3000, image:"item242193189.jpg"},
-  {name:"Chicken Shawarma + 1 Hotdog", price:3000, image:"ym7lhpiyosyudyefblvh.jpg"},
-  {name:"Chicken Shawarma + 2 Hotdogs", price:3500, image:"item153738991.jpg"},
-  {name:"Jumbo Shawarma", price:6000, image:"1400x919-SausageMeatballMeltPittas-de071294-9bc8-465f-b23e-84c86872573a-0-1400x919.jpg"}
+  {
+    name:"Beef Shawarma + 1 Hotdog",
+    price:2500,
+    image:"https://images.unsplash.com/photo-1604908176997-431bfa53e1f1?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    name:"Beef Shawarma + 2 Hotdogs",
+    price:3000,
+    image:"https://images.unsplash.com/photo-1619740455993-9e6125f6fbe4?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    name:"Chicken Shawarma + 1 Hotdog",
+    price:3000,
+    image:"https://images.unsplash.com/photo-1601050690117-94f5f6fae7d6?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    name:"Chicken Shawarma + 2 Hotdogs",
+    price:3500,
+    image:"https://images.unsplash.com/photo-1598514982841-1b08f6b3dfd3?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    name:"Jumbo Shawarma",
+    price:6000,
+    image:"https://images.unsplash.com/photo-1625944525339-6b1fbd66a742?auto=format&fit=crop&w=800&q=80"
+  }
 ];
 
 const menu = document.getElementById("menu");
@@ -16,7 +36,8 @@ const menu = document.getElementById("menu");
 function renderMenu(){
   menu.innerHTML = products.map((p,i)=>`
     <div class="card">
-      <img src="${p.image}" alt="${p.name}">
+      <img src="${p.image}" alt="${p.name}" 
+           onerror="this.src='https://via.placeholder.com/400x300?text=Shawarma'">
       <h3>${p.name}</h3>
       <p>₦${p.price}</p>
       <button onclick="addToCart(${i})">Add to Cart</button>
@@ -50,8 +71,12 @@ function animateFly(index){
   document.body.appendChild(flyImg);
 
   const rect = img.getBoundingClientRect();
+  flyImg.style.position = "fixed";
   flyImg.style.top = rect.top+"px";
   flyImg.style.left = rect.left+"px";
+  flyImg.style.width = rect.width+"px";
+  flyImg.style.height = rect.height+"px";
+  flyImg.style.transition = "all 0.7s ease";
 
   const cartIcon = document.getElementById("openCart");
   const cartRect = cartIcon.getBoundingClientRect();
@@ -77,6 +102,7 @@ function updateCart(){
 
   cartList.innerHTML = '';
   let subtotal = 0;
+
   if(cart.length === 0) emptyMsg.style.display = 'block';
   else emptyMsg.style.display = 'none';
 
@@ -107,7 +133,11 @@ function removeItem(i){cart.splice(i,1); updateCart();}
 const cartDrawer = document.getElementById("cartDrawer");
 const overlay = document.getElementById("overlay");
 
-document.getElementById("openCart").onclick = () => {cartDrawer.classList.add("open"); overlay.style.display="block";}
+document.getElementById("openCart").onclick = () => {
+  cartDrawer.classList.add("open"); 
+  overlay.style.display="block";
+}
+
 document.getElementById("closeCart").onclick = closeCart;
 overlay.onclick = closeCart;
 
@@ -117,7 +147,9 @@ function closeCart(){
 }
 
 // Dark Mode
-document.getElementById("themeToggle").onclick = () => {document.body.classList.toggle("dark");}
+document.getElementById("themeToggle").onclick = () => {
+  document.body.classList.toggle("dark");
+}
 
 // Checkout via WhatsApp
 document.getElementById("checkoutBtn").onclick = checkout;
@@ -129,7 +161,9 @@ function checkout(){
   if(!address){ alert("Enter delivery address"); return; }
 
   let msg = `Hello Shawarma Chop 5ive!\n\nOrder:\n`;
-  cart.forEach(item => { msg += `${item.name} x${item.quantity} - ₦${item.price*item.quantity}\n`; });
+  cart.forEach(item => {
+    msg += `${item.name} x${item.quantity} - ₦${item.price*item.quantity}\n`;
+  });
 
   let subtotal = cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
   let total = subtotal + deliveryFee;
@@ -145,16 +179,17 @@ function checkout(){
 }
 
 // Card Slide-In Animation
-const cards = document.querySelectorAll('.card');
 function slideInCards(){
+  const cards = document.querySelectorAll('.card');
   const triggerBottom = window.innerHeight * 0.85;
+
   cards.forEach(card => {
     const cardTop = card.getBoundingClientRect().top;
     if(cardTop < triggerBottom) card.classList.add('show');
   });
 }
+
 window.addEventListener('scroll', slideInCards);
 window.addEventListener('load', slideInCards);
-window.addEventListener('scroll', slideInCards);
-window.addEventListener('load', slideInCards);
+
 
