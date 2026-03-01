@@ -9,7 +9,8 @@
 <body>
 
 <header>
-    <h1>🌯 Shawarma Chop 5ive</h1>
+    <!-- Chef Icon Added -->
+    <h1>👨‍🍳🌯 Shawarma Chop 5ive</h1>
     <div class="header-right">
         <button id="themeToggle">🌙</button>
         <button id="openCart">🛒 <span id="cart-count">0</span></button>
@@ -17,20 +18,22 @@
 </header>
 
 <section class="hero">
-    <h2>Premium Shawarma Experience 🔥</h2>
+    <h2>Hot & Fresh Shawarma Delivered Fast 🔥</h2>
 </section>
 
 <section class="menu">
 
+<!-- First Card -->
 <div class="card">
-<img src="https://images.unsplash.com/photo-1529006557810-274b9b2fc783?auto=format&fit=crop&w=900&q=80" alt="Shawarma">
+<img src="https://images.unsplash.com/photo-1529006557810-274b9b2fc783?auto=format&fit=crop&w=900&q=80" alt="Shawarma + 1 Hotdog">
 <h3>Shawarma + 1 Hotdog</h3>
 <p>₦2500</p>
 <button onclick="addToCart('Shawarma + 1 Hotdog',2500)">Add to Cart</button>
 </div>
 
+<!-- Second Card (Fixed Image) -->
 <div class="card">
-<img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=80" alt="Shawarma with 2 Hotdogs">
+<img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=900&q=80" alt="Shawarma + 2 Hotdogs">
 <h3>Shawarma + 2 Hotdogs</h3>
 <p>₦3000</p>
 <button onclick="addToCart('Shawarma + 2 Hotdogs',3000)">Add to Cart</button>
@@ -47,8 +50,7 @@
 <h3>Delivery: ₦500</h3>
 <h2>Total: ₦<span id="total">0</span></h2>
 
-<input type="text" id="address" placeholder="Delivery address">
-
+<input type="text" id="address" placeholder="Enter delivery address">
 <select id="payment">
 <option>Cash on Delivery</option>
 <option>Card Payment</option>
