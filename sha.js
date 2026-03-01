@@ -1,77 +1,157 @@
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let deliveryFee = 500;
+const deliveryFee = 500;
+const whatsappNumber = "2348089099685";
+let cart = [];
 
-function saveCart(){ localStorage.setItem("cart", JSON.stringify(cart)); }
+const products = [
+  {name:"Beef Shawarma + 1 Hotdog", price:2500, image:"https://images.unsplash.com/photo-1604908177225-5b5fbd7be3c7?w=1000"},
+  {name:"Beef Shawarma + 2 Hotdogs", price:3000, image:"https://images.unsplash.com/photo-1617196039897-6b16c0daac90?w=1000"},
+  {name:"Chicken Shawarma + 1 Hotdog", price:3000, image:"https://images.unsplash.com/photo-1604908177225-5b5fbd7be3c7?w=1000"},
+  {name:"Chicken Shawarma + 2 Hotdogs", price:3500, image:"https://images.unsplash.com/photo-1617196039897-6b16c0daac90?w=1000"},
+  {name:"Jumbo Shawarma", price:6000, image:"https://images.unsplash.com/photo-1585238342028-4e7d8a6a8c8d?w=1000"}
+];
 
-function addToCart(name, price){
-    let existing = cart.find(item => item.name === name);
-    if(existing){ existing.qty++; } else { cart.push({name, price, qty:1}); }
-    updateCart();
+const menu = document.getElementById("menu");
+
+// Render Menu
+function renderMenu(){
+  menu.innerHTML = products.map((p,i)=>`
+    <div class="card">
+      <img src="${p.image}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>₦${p.price}</p>
+      <button onclick="addToCart(${i})">Add to Cart</button>
+    </div>
+  `).join('');
+}
+renderMenu();
+
+// HERO ANIMATION
+window.addEventListener('load', () => {
+  const heroText = document.querySelector('.hero h2');
+  setTimeout(() => heroText.classList.add('show'), 200);
+});
+
+// Cart Functions
+function addToCart(index){
+  const item = products[index];
+  const exist = cart.find(p=>p.name===item.name);
+  if(exist) exist.quantity++;
+  else cart.push({...item, quantity: 1});
+  animateFly(index);
+  updateCart();
 }
 
+// Animate item flying to cart
+function animateFly(index){
+  const card = document.querySelectorAll(".card")[index];
+  const img = card.querySelector("img");
+  const flyImg = img.cloneNode(true);
+  flyImg.classList.add("fly");
+  document.body.appendChild(flyImg);
+
+  const rect = img.getBoundingClientRect();
+  flyImg.style.top = rect.top+"px";
+  flyImg.style.left = rect.left+"px";
+
+  const cartIcon = document.getElementById("openCart");
+  const cartRect = cartIcon.getBoundingClientRect();
+
+  setTimeout(()=>{
+    flyImg.style.top = cartRect.top+"px";
+    flyImg.style.left = cartRect.left+"px";
+    flyImg.style.width = "20px";
+    flyImg.style.height = "20px";
+    flyImg.style.opacity = "0.5";
+  },50);
+
+  setTimeout(()=>flyImg.remove(),800);
+}
+
+// Update Cart
 function updateCart(){
-    let list = document.getElementById("cart");
-    list.innerHTML="";
-    let subtotal=0, count=0;
-    cart.forEach((item,index)=>{
-        subtotal += item.price * item.qty;
-        count += item.qty;
-        let li=document.createElement("li");
-        li.innerHTML = `
-            ${item.name} x${item.qty}
-            <div>
-                <button onclick="changeQty(${index},-1)">-</button>
-                <button onclick="changeQty(${index},1)">+</button>
-                <button onclick="removeItem(${index})">❌</button>
-            </div>
-        `;
-        list.appendChild(li);
-    });
-    document.getElementById("subtotal").innerText=subtotal;
-    document.getElementById("total").innerText=subtotal + deliveryFee;
-    document.getElementById("cart-count").innerText=count;
-    saveCart();
+  const cartList = document.getElementById("cart");
+  const subtotalEl = document.getElementById("subtotal");
+  const totalEl = document.getElementById("total");
+  const countEl = document.getElementById("cart-count");
+  const emptyMsg = document.getElementById("emptyMessage");
+
+  cartList.innerHTML = '';
+  let subtotal = 0;
+  if(cart.length === 0) emptyMsg.style.display = 'block';
+  else emptyMsg.style.display = 'none';
+
+  cart.forEach((item,i)=>{
+    subtotal += item.price * item.quantity;
+    cartList.innerHTML += `
+      <li>
+        <div>${item.name}<br>₦${item.price} x ${item.quantity}</div>
+        <div>
+          <button onclick="decreaseQty(${i})">-</button>
+          <button onclick="increaseQty(${i})">+</button>
+          <button onclick="removeItem(${i})">🗑</button>
+        </div>
+      </li>
+    `;
+  });
+
+  subtotalEl.textContent = subtotal;
+  totalEl.textContent = subtotal + deliveryFee;
+  countEl.textContent = cart.reduce((sum,i)=>sum+i.quantity,0);
 }
 
-function changeQty(index, change){
-    cart[index].qty += change;
-    if(cart[index].qty <= 0){ cart.splice(index,1); }
-    updateCart();
+function increaseQty(i){cart[i].quantity++; updateCart();}
+function decreaseQty(i){if(cart[i].quantity>1) cart[i].quantity--; else cart.splice(i,1); updateCart();}
+function removeItem(i){cart.splice(i,1); updateCart();}
+
+// Cart Drawer
+const cartDrawer = document.getElementById("cartDrawer");
+const overlay = document.getElementById("overlay");
+
+document.getElementById("openCart").onclick = () => {cartDrawer.classList.add("open"); overlay.style.display="block";}
+document.getElementById("closeCart").onclick = closeCart;
+overlay.onclick = closeCart;
+
+function closeCart(){
+  cartDrawer.classList.remove("open");
+  overlay.style.display = "none";
 }
 
-function removeItem(index){ cart.splice(index,1); updateCart(); }
+// Dark Mode
+document.getElementById("themeToggle").onclick = () => {document.body.classList.toggle("dark");}
+
+// Checkout via WhatsApp
+document.getElementById("checkoutBtn").onclick = checkout;
 
 function checkout(){
-    let address = document.getElementById("address").value;
-    let payment = document.getElementById("payment").value;
-    if(cart.length===0){ alert("Cart is empty!"); return; }
-    if(address.trim()===""){ alert("Enter delivery address!"); return; }
+  if(cart.length === 0){ alert("Cart is empty"); return;}
+  const address = document.getElementById("address").value;
+  const payment = document.getElementById("payment").value;
+  if(!address){ alert("Enter delivery address"); return; }
 
-    let message = "New Order 🚀%0A";
-    cart.forEach(item=>{ message += `${item.name} x${item.qty}%0A`; });
-    let subtotal = cart.reduce((sum,item)=>sum + item.price*item.qty,0);
-    let total = subtotal + deliveryFee;
-    message += `Payment Method: ${payment}%0A`;
-    message += `Address: ${address}%0A`;
-    message += `Subtotal: ₦${subtotal}%0A`;
-    message += `Delivery Fee: ₦${deliveryFee}%0A`;
-    message += `Total: ₦${total}`;
+  let msg = `Hello Shawarma Chop 5ive!\n\nOrder:\n`;
+  cart.forEach(item => { msg += `${item.name} x${item.quantity} - ₦${item.price*item.quantity}\n`; });
 
-    let number = "2348089099685"; // Your WhatsApp number
-    window.open(`https://wa.me/${number}?text=${message}`, "_blank");
+  let subtotal = cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
+  let total = subtotal + deliveryFee;
 
-    cart=[]; updateCart(); document.getElementById("address").value="";
+  msg += `\nSubtotal: ₦${subtotal}\nDelivery: ₦${deliveryFee}\nTotal: ₦${total}\n`;
+  msg += `\nAddress: ${address}\nPayment: ${payment}`;
+
+  window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`,"_blank");
+
+  cart = [];
+  updateCart();
+  closeCart();
 }
 
-// Cart drawer open/close
-document.getElementById("openCart").onclick = ()=>{ document.getElementById("cartDrawer").classList.add("open"); };
-document.getElementById("closeCart").onclick = ()=>{ document.getElementById("cartDrawer").classList.remove("open"); };
-
-// Dark mode toggle
-document.getElementById("themeToggle").onclick = ()=>{
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme",document.body.classList.contains("dark"));
-};
-if(localStorage.getItem("theme")==="true"){ document.body.classList.add("dark"); }
-
-updateCart();
+// Card Slide-In Animation
+const cards = document.querySelectorAll('.card');
+function slideInCards(){
+  const triggerBottom = window.innerHeight * 0.85;
+  cards.forEach(card => {
+    const cardTop = card.getBoundingClientRect().top;
+    if(cardTop < triggerBottom) card.classList.add('show');
+  });
+}
+window.addEventListener('scroll', slideInCards);
+window.addEventListener('load', slideInCards);
