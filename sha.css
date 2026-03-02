@@ -1,10 +1,20 @@
 /* -------------------- RESET -------------------- */
 * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; transition:0.3s; }
-body { background:#f9f9f9; color:#222; }
-body.dark { background:#121212; color:#fff; }
+body {
+  background: linear-gradient(-45deg, #f6d365, #fda085, #d6a15c, #f7e2b7);
+  background-size: 400% 400%;
+  animation: gradientBG 20s ease infinite;
+  color:#222;
+}
+body.dark {
+  background: linear-gradient(-45deg, #3a3a3a, #2c2c2c, #1e1e1e, #2a2a2a);
+  background-size: 400% 400%;
+  animation: gradientBG 20s ease infinite;
+  color:#fff;
+}
 
 /* -------------------- HEADER -------------------- */
-header { background: linear-gradient(135deg,#111,#1abc9c); color:white; padding:15px 25px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; }
+header { background: linear-gradient(135deg,#111,#1abc9c); color:white; padding:15px 25px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
 .logo-container { display:flex; align-items:center; gap:10px; }
 .logo-icon { font-size:34px; }
 .logo-text { font-size:22px; font-weight:bold; }
@@ -12,13 +22,10 @@ header { background: linear-gradient(135deg,#111,#1abc9c); color:white; padding:
 .cart-btn span { background:red; padding:2px 6px; border-radius:50%; color:white; font-size:12px; }
 
 /* -------------------- HERO -------------------- */
-.hero { text-align:center; padding:50px 20px; background: linear-gradient(135deg,#1abc9c,#16a085); color:white; }
-.hero h2 { font-size:30px; opacity:0; transform:translateY(20px); transition:1s ease; }
+.hero { text-align:center; padding:50px 20px; position:relative; overflow:hidden; color:white; }
+.hero h2 { font-size:30px; opacity:0; transform:translateY(20px); transition:1s ease; position:relative; z-index:1; }
 .hero h2.show { opacity:1; transform:translateY(0); }
-
-/* -------------------- CONTROLS -------------------- */
-.controls { display:flex; justify-content:center; gap:10px; padding:15px; flex-wrap:wrap; }
-.controls input, .controls select { padding:10px; border-radius:8px; border:1px solid #ccc; }
+.hero-video { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; filter:brightness(0.6); }
 
 /* -------------------- MENU -------------------- */
 .menu { display:grid; grid-template-columns:1fr; gap:20px; padding:20px; }
@@ -33,20 +40,31 @@ body.dark .card { background:#1e1e1e; }
 .card p { padding:5px 15px; color:#1abc9c; font-weight:bold; font-size:18px; }
 .card button { margin:15px; padding:10px; border:none; border-radius:10px; background:#111; color:white; cursor:pointer; font-weight:bold; transition:0.3s; }
 .card button:hover { background:#1abc9c; }
-.badge { position:absolute; top:10px; left:10px; background:#e74c3c; color:white; padding:5px 10px; border-radius:12px; font-size:12px; font-weight:bold; }
 
 /* -------------------- CART -------------------- */
-.cart-drawer { position:fixed; top:0; right:-100%; width:100%; max-width:400px; height:100%; background:white; padding:20px; transition:0.4s ease; z-index:1000; overflow-y:auto; }
-body.dark .cart-drawer { background:#1e1e1e; }
+.cart-drawer { position: fixed; top:0; right:-100%; width:100%; max-width:400px; height:100%; background:#fff; padding:25px; box-shadow:-4px 0 15px rgba(0,0,0,0.2); transition:right 0.4s ease; z-index:1000; display:flex; flex-direction:column; overflow-y:auto; border-radius:12px 0 0 12px; }
+body.dark .cart-drawer { background:#1e1e1e; color:#fff; }
 .cart-drawer.open { right:0; }
-#overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; z-index:900; }
-.cart-drawer h2 { margin-bottom:15px; }
-.cart-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-.cart-item div { display:flex; align-items:center; gap:5px; }
-.cart-item button { background:#e74c3c; border:none; color:white; border-radius:6px; padding:2px 6px; cursor:pointer; }
+#overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); display:none; z-index:900; }
 
-/* -------------------- CHECKOUT -------------------- */
-.checkout { width:100%; padding:12px; border:none; border-radius:8px; background:#1abc9c; color:white; font-weight:bold; cursor:pointer; margin-top:10px; }
+.cart-header { display:flex; align-items:center; gap:15px; margin-bottom:20px; }
+.back-btn { background:#111; color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
+body.dark .back-btn { background:#1abc9c; color:#111; }
+
+#cart { list-style:none; padding:0; margin:0; flex-grow:1; }
+.cart-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:10px; border-radius:12px; background:#f1f1f1; transition:0.3s; }
+body.dark .cart-item { background:#2c2c2c; }
+.cart-item:hover { background:#e0f7fa; }
+.cart-item div { display:flex; align-items:center; gap:8px; }
+.cart-item button { background:#e74c3c; border:none; color:white; border-radius:6px; padding:4px 8px; cursor:pointer; font-weight:bold; transition:0.3s; }
+.cart-item button:hover { background:#c0392b; }
+
+.totals { margin-top:15px; padding-top:10px; border-top:2px solid #ccc; }
+.totals h3, .totals h2 { display:flex; justify-content:space-between; margin-bottom:8px; font-weight:600; }
+.totals h2 { font-size:22px; color:#1abc9c; }
+
+#address, #payment { width:100%; padding:12px; margin-top:12px; border-radius:8px; border:1px solid #ccc; font-size:16px; }
+.checkout { width:100%; padding:14px; margin-top:15px; border-radius:10px; background:#1abc9c; color:white; font-weight:bold; font-size:16px; cursor:pointer; transition:0.3s; }
 .checkout:hover { background:#16a085; }
 
 /* -------------------- FLOATING WHATSAPP -------------------- */
@@ -54,3 +72,14 @@ body.dark .cart-drawer { background:#1e1e1e; }
 
 /* -------------------- TOAST -------------------- */
 #toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#111; color:white; padding:10px 20px; border-radius:8px; opacity:0; pointer-events:none; transition:0.5s; z-index:1100; }
+
+/* -------------------- ANIMATED GRADIENT -------------------- */
+@keyframes gradientBG {
+  0% { background-position:0% 50%; }
+  50% { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+
+/* -------------------- TOAST -------------------- */
+#toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#111; color:white; padding:10px 20px; border-radius:8px; opacity:0; pointer-events:none; transition:0.5s; z-index:1100; }
+
