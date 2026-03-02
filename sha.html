@@ -3,28 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>shawarma shopping</title>
+  <title>Chop 5ive Shawarma</title>
   <link rel="stylesheet" href="sha.css">
 </head>
 <body>
 
   <!-- HEADER -->
   <header>
-    <div class="logo-container">
-      <span class="logo-icon">🌯</span>
-      <h1 class="logo-text">CHOP 5IVE SHAWARMA</h1>
-    </div>
+  <div class="logo-container">
+    <img src="chef.png" alt="Chef Logo" class="logo-icon">
+    <h1 class="logo-text">CHOP 5IVE SHAWARMA</h1>
+  </div>
 
-    <div class="header-right">
-      <button id="themeToggle" class="icon-btn">🌙</button>
-      <button id="openCart" class="cart-btn">🛒 <span id="cart-count">0</span></button>
-    </div>
+  <div class="header-right">
+    <button id="themeToggle" class="icon-btn">🌙</button>
+    <button id="openCart" class="cart-btn">🛒 <span id="cart-count">0</span></button>
+  </div>
   </header>
 
   <!-- HERO -->
-  <section class="hero">
-    <h2>Hot & Fresh Shawarma Delivered Fast 🔥</h2>
-  </section>
+<section class="hero">
+  <video autoplay muted loop playsinline class="hero-video">
+    <source src="shawarma.mp4" type="video/mp4">
+  </video>
+
+  <h2 class="hero-title">
+    Hot & Fresh Shawarma Delivered Fast 
+    <span class="fire">🔥</span>
+  </h2>
+</section>
 
   <!-- MENU -->
   <section class="menu" id="menu"></section>
@@ -61,3 +68,5 @@
   <script src="sha.js"></script>
 </body>
 </html>
+</html>
+
