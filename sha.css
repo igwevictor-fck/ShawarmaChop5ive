@@ -1,302 +1,157 @@
-/* -------------------- RESET -------------------- */
-* { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; transition:0.3s; }
-body {
-  background: linear-gradient(-45deg, #f6d365, #fda085, #d6a15c, #f7e2b7);
-  background-size: 400% 400%;
-  animation: gradientBG 20s ease infinite;
-  color:#222;
-}
-body.dark {
-  background: linear-gradient(-45deg, #3a3a3a, #2c2c2c, #1e1e1e, #2a2a2a);
-  background-size: 400% 400%;
-  animation: gradientBG 20s ease infinite;
-  color:#fff;
-}
+const deliveryFee = 500;
+const whatsappNumber = "2348089099685";
+let cart = [];
 
-/* -------------------- HEADER -------------------- */
-header { background: linear-gradient(135deg,#111,#1abc9c); color:white; padding:15px 25px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
-.logo-container { display:flex; align-items:center; gap:10px; }
-.logo-icon { font-size:34px; }
-.logo-text { font-size:22px; font-weight:bold; }
-.header-right button { background:white; color:#111; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; font-weight:600; margin-left:8px; }
-.cart-btn span { background:red; padding:2px 6px; border-radius:50%; color:white; font-size:12px; }
+const products = [
+  {name:"Beef Shawarma + 1 Hotdog", price:2500, image:"beef-sausage-shawarma-recipe-main-photo.jpg"},
+  {name:"Beef Shawarma + 2 Hotdogs", price:3000, image:"item242193189.jpg"},
+  {name:"Chicken Shawarma + 1 Hotdog", price:3000, image:"ym7lhpiyosyudyefblvh.jpg"},
+  {name:"Chicken Shawarma + 2 Hotdogs", price:3500, image:"item153738991.jpg"},
+  {name:"Jumbo Shawarma", price:6000, image:"1400x919-SausageMeatballMeltPittas-de071294-9bc8-465f-b23e-84c86872573a-0-1400x919.jpg"}
+];
 
-/* HERO TITLE */
-.hero-title {
-  position: relative;
-  color: white;
-  font-size: 2.8rem;
-  font-weight: 900;
-  text-align: center;
-  z-index: 2;
-  text-shadow: 
-    0 0 10px rgba(255,140,0,0.8),
-    0 0 20px rgba(255,69,0,0.7),
-    0 0 40px rgba(255,0,0,0.6);
-  animation: floatText 3s ease-in-out infinite;
+const menu = document.getElementById("menu");
+
+// Render Menu
+function renderMenu(){
+  menu.innerHTML = products.map((p,i)=>`
+    <div class="card">
+      <img src="${p.image}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>₦${p.price}</p>
+      <button onclick="addToCart(${i})">Add to Cart</button>
+    </div>
+  `).join('');
 }
+renderMenu();
 
-/* FIRE ANIMATION */
-.fire {
-  display: inline-block;
-  animation: fireDance 0.6s infinite alternate;
-  filter: drop-shadow(0 0 10px orange);
+// HERO ANIMATION
+window.addEventListener('load', () => {
+  const heroText = document.querySelector('.hero h2');
+  setTimeout(() => heroText.classList.add('show'), 200);
+});
+
+// Cart Functions
+function addToCart(index){
+  const item = products[index];
+  const exist = cart.find(p=>p.name===item.name);
+  if(exist) exist.quantity++;
+  else cart.push({...item, quantity: 1});
+  animateFly(index);
+  updateCart();
 }
 
-/* Fire bounce + flicker */
-@keyframes fireDance {
-  0% {
-    transform: translateY(0) scale(1);
-  }
-  100% {
-    transform: translateY(-8px) scale(1.2);
-  }
+// Animate item flying to cart
+function animateFly(index){
+  const card = document.querySelectorAll(".card")[index];
+  const img = card.querySelector("img");
+  const flyImg = img.cloneNode(true);
+  flyImg.classList.add("fly");
+  document.body.appendChild(flyImg);
+
+  const rect = img.getBoundingClientRect();
+  flyImg.style.top = rect.top+"px";
+  flyImg.style.left = rect.left+"px";
+
+  const cartIcon = document.getElementById("openCart");
+  const cartRect = cartIcon.getBoundingClientRect();
+
+  setTimeout(()=>{
+    flyImg.style.top = cartRect.top+"px";
+    flyImg.style.left = cartRect.left+"px";
+    flyImg.style.width = "20px";
+    flyImg.style.height = "20px";
+    flyImg.style.opacity = "0.5";
+  },50);
+
+  setTimeout(()=>flyImg.remove(),800);
 }
 
-/* Floating main text */
-@keyframes floatText {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+// Update Cart
+function updateCart(){
+  const cartList = document.getElementById("cart");
+  const subtotalEl = document.getElementById("subtotal");
+  const totalEl = document.getElementById("total");
+  const countEl = document.getElementById("cart-count");
+  const emptyMsg = document.getElementById("emptyMessage");
+
+  cartList.innerHTML = '';
+  let subtotal = 0;
+  if(cart.length === 0) emptyMsg.style.display = 'block';
+  else emptyMsg.style.display = 'none';
+
+  cart.forEach((item,i)=>{
+    subtotal += item.price * item.quantity;
+    cartList.innerHTML += `
+      <li>
+        <div>${item.name}<br>₦${item.price} x ${item.quantity}</div>
+        <div>
+          <button onclick="decreaseQty(${i})">-</button>
+          <button onclick="increaseQty(${i})">+</button>
+          <button onclick="removeItem(${i})">🗑</button>
+        </div>
+      </li>
+    `;
+  });
+
+  subtotalEl.textContent = subtotal;
+  totalEl.textContent = subtotal + deliveryFee;
+  countEl.textContent = cart.reduce((sum,i)=>sum+i.quantity,0);
 }
 
-/* -------------------- MENU -------------------- */
-.menu { display:grid; grid-template-columns:1fr; gap:20px; padding:20px; }
-@media(min-width:700px){ .menu { grid-template-columns:repeat(2,1fr); } }
-@media(min-width:1000px){ .menu { grid-template-columns:repeat(3,1fr); } }
-.card { background:white; border-radius:16px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1); transform:translateY(40px); opacity:0; transition:0.6s ease; position:relative; }
-body.dark .card { background:#1e1e1e; }
-.card.show { transform:translateY(0); opacity:1; }
-.card img { width:100%; height:220px; object-fit:cover; transition:0.4s ease; }
-.card:hover img { transform:scale(1.08); }
-.card h3 { padding:12px 15px 0; }
-.card p { padding:5px 15px; color:#1abc9c; font-weight:bold; font-size:18px; }
-.card button { margin:15px; padding:10px; border:none; border-radius:10px; background:#111; color:white; cursor:pointer; font-weight:bold; transition:0.3s; }
-.card button:hover { background:#1abc9c; }
+function increaseQty(i){cart[i].quantity++; updateCart();}
+function decreaseQty(i){if(cart[i].quantity>1) cart[i].quantity--; else cart.splice(i,1); updateCart();}
+function removeItem(i){cart.splice(i,1); updateCart();}
 
-/* -------------------- PREMIUM CART -------------------- */
+// Cart Drawer
+const cartDrawer = document.getElementById("cartDrawer");
+const overlay = document.getElementById("overlay");
 
-.cart-drawer {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 100%;
-  max-width: 420px;
-  height: 100%;
-  padding: 25px;
-  backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: -10px 0 40px rgba(0,0,0,0.3);
-  transition: right 0.45s cubic-bezier(.77,0,.18,1);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  border-radius: 20px 0 0 20px;
+document.getElementById("openCart").onclick = () => {cartDrawer.classList.add("open"); overlay.style.display="block";}
+document.getElementById("closeCart").onclick = closeCart;
+overlay.onclick = closeCart;
+
+function closeCart(){
+  cartDrawer.classList.remove("open");
+  overlay.style.display = "none";
 }
 
-body.dark .cart-drawer {
-  background: rgba(30,30,30,0.9);
-  color: white;
+// Dark Mode
+document.getElementById("themeToggle").onclick = () => {document.body.classList.toggle("dark");}
+
+// Checkout via WhatsApp
+document.getElementById("checkoutBtn").onclick = checkout;
+
+function checkout(){
+  if(cart.length === 0){ alert("Cart is empty"); return;}
+  const address = document.getElementById("address").value;
+  const payment = document.getElementById("payment").value;
+  if(!address){ alert("Enter delivery address"); return; }
+
+  let msg = `Hello Shawarma Chop 5ive!\n\nOrder:\n`;
+  cart.forEach(item => { msg += `${item.name} x${item.quantity} - ₦${item.price*item.quantity}\n`; });
+
+  let subtotal = cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
+  let total = subtotal + deliveryFee;
+
+  msg += `\nSubtotal: ₦${subtotal}\nDelivery: ₦${deliveryFee}\nTotal: ₦${total}\n`;
+  msg += `\nAddress: ${address}\nPayment: ${payment}`;
+
+  window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`,"_blank");
+
+  cart = [];
+  updateCart();
+  closeCart();
 }
 
-.cart-drawer.open {
-  right: 0;
+// Card Slide-In Animation
+const cards = document.querySelectorAll('.card');
+function slideInCards(){
+  const triggerBottom = window.innerHeight * 0.85;
+  cards.forEach(card => {
+    const cardTop = card.getBoundingClientRect().top;
+    if(cardTop < triggerBottom) card.classList.add('show');
+  });
 }
-
-#overlay {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(5px);
-  display:none;
-  z-index:900;
-}
-
-/* HEADER */
-.cart-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.cart-header h2 {
-  font-size:22px;
-  font-weight:700;
-}
-
-.back-btn {
-  background: linear-gradient(135deg,#1abc9c,#16a085);
-  border:none;
-  color:white;
-  padding:8px 12px;
-  border-radius:10px;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.back-btn:hover {
-  transform: scale(1.1);
-}
-
-/* CART ITEMS */
-#cart {
-  list-style:none;
-  padding:0;
-  margin:0;
-  flex-grow:1;
-}
-
-.cart-item {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px;
-  margin-bottom:15px;
-  border-radius:16px;
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-  transition:0.3s;
-}
-
-body.dark .cart-item {
-  background: rgba(50,50,50,0.6);
-}
-
-.cart-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-.cart-item-info {
-  display:flex;
-  flex-direction:column;
-  font-size:14px;
-  font-weight:600;
-}
-
-.cart-item-controls {
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-
-.cart-item button {
-  border:none;
-  width:28px;
-  height:28px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-  transition:0.2s;
-}
-
-.cart-item button:nth-child(1) { background:#1abc9c; color:white; }
-.cart-item button:nth-child(2) { background:#f39c12; color:white; }
-.cart-item button:nth-child(3) { background:#e74c3c; color:white; }
-
-.cart-item button:hover {
-  transform: scale(1.1);
-}
-
-/* TOTAL SECTION */
-.totals {
-  margin-top:15px;
-  padding:15px;
-  border-radius:18px;
-  background: linear-gradient(135deg,#1abc9c,#16a085);
-  color:white;
-  box-shadow: 0 10px 25px rgba(26,188,156,0.4);
-}
-
-.totals h3,
-.totals h2 {
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:6px;
-}
-
-.totals h2 {
-  font-size:22px;
-}
-
-/* INPUTS */
-#address, #payment {
-  width:100%;
-  padding:12px;
-  margin-top:14px;
-  border-radius:12px;
-  border:none;
-  font-size:15px;
-  box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
-}
-
-#address:focus,
-#payment:focus {
-  outline:none;
-  box-shadow: 0 0 10px rgba(26,188,156,0.6);
-}
-
-/* CHECKOUT BUTTON */
-.checkout {
-  width:100%;
-  padding:16px;
-  margin-top:18px;
-  border:none;
-  border-radius:14px;
-  background: linear-gradient(135deg,#111,#1abc9c);
-  color:white;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-  box-shadow:0 8px 20px rgba(0,0,0,0.3);
-}
-
-.checkout:hover {
-  transform: translateY(-4px);
-  box-shadow:0 12px 30px rgba(0,0,0,0.4);
-}
-
-/* EMPTY MESSAGE */
-#emptyMessage {
-  text-align:center;
-  padding:40px 10px;
-  font-size:16px;
-  opacity:0.7;
-}
-
-/* -------------------- FLOATING WHATSAPP -------------------- */
-.whatsapp-float { position:fixed; bottom:20px; right:20px; background:#25d366; color:white; font-size:28px; padding:12px; border-radius:50%; text-decoration:none; box-shadow:0 6px 15px rgba(0,0,0,0.3); }
-
-/* -------------------- TOAST -------------------- */
-#toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#111; color:white; padding:10px 20px; border-radius:8px; opacity:0; pointer-events:none; transition:0.5s; z-index:1100; }
-.logo-icon {
-  width: 55px;
-  height: 55px;
-  object-fit: contain;
-  border-radius: 50%;
-  background: white;
-  padding: 5px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-/* -------------------- ANIMATED GRADIENT -------------------- */
-@keyframes gradientBG {
-  0% { background-position:0% 50%; }
-  50% { background-position:100% 50%; }
-  100% { background-position:0% 50%; }
-}
-
-
+window.addEventListener('scroll', slideInCards);
+window.addEventListener('load', slideInCards);
